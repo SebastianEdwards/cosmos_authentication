@@ -7,9 +7,9 @@ Gem::Specification.new do |s|
   s.version     = CosmosAuthentication::VERSION
   s.authors     = ["Sebastian Edwards"]
   s.email       = ["sebastian@uprise.co.nz"]
-  s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.homepage    = "https://github.com/SebastianEdwards/cosmos_authentication"
+  s.summary     = %q{A client for the cosmos authentication service.}
+  s.description = s.summary
 
   s.rubyforge_project = "cosmos_authentication"
 
