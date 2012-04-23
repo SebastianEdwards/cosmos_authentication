@@ -24,6 +24,9 @@ module Cosmos
     end
 
     class Resource
+      extend Forwardable
+      def_delegator :@collection, :items
+
       def initialize(client, collection)
         @client = client
         @collection = collection
