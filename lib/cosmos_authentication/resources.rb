@@ -7,13 +7,17 @@ module Cosmos
       end
 
       def has_resource?(uri)
-        matches = @collection.items.select do |item|
+        all.select do |item|
           item.href == uri
         end.length > 0
       end
 
+      def first
+        all.first
+      end
+
       def all
-        @collection.items.map do |item|
+        @resources ||= @collection.items.map do |item|
           Stub.new(@client, Resource, item.href)
         end
       end
