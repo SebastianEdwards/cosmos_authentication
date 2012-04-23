@@ -5,6 +5,7 @@ module Cosmos
   module Authentication
     class Service < Cosmos::Service
       attr_accessor :client_id, :client_secret
+      attr_writer :resource_owner_class
 
       def client_with_credentials
         raise "No credentials configured." unless client_id && client_secret
@@ -49,14 +50,18 @@ module Cosmos
         response.body
       end
 
-      def resource_owner(access_token, klass = ResourceOwner)
+      def resource_owner(access_token)
         client = client_with_token(access_token)
         href = endpoint.link('resource_owner').href
         response = client.get(href).body
         if response.items.length > 0
           response = client.get(response.items.first.href).body
-          klass.new(client, response)
+          resource_owner_class.new(client, response)
         end
+      end
+
+      def resource_owner_class
+        @resource_owner_class || ResourceOwner
       end
 
       def token_link
