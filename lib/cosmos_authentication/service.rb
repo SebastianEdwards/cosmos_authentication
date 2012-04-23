@@ -1,5 +1,6 @@
 require "cosmos/service"
 require "cosmos_authentication/resource_owner"
+require "cosmos_authentication/providers"
 
 module Cosmos
   module Authentication
@@ -48,6 +49,17 @@ module Cosmos
           :scope            => 'manage_companies'
         }
         response.body
+      end
+
+      def providers
+        if providers_link
+          response = client.get(providers_link.href).body
+          Providers.new(client, response)
+        end
+      end
+
+      def providers_link
+        endpoint.link('providers')
       end
 
       def resource_owner(access_token)
