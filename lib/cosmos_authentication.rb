@@ -1,6 +1,6 @@
 require "cosmos_authentication/version"
 require "cosmos_authentication/service"
-require "cosmos_authentication/warden" if Warden
+require "cosmos_authentication/warden" if defined? Warden
 
 module Cosmos
   module Authentication
