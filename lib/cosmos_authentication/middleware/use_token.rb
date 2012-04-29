@@ -1,4 +1,4 @@
-module Cosmos
+module CosmosAuthentication
   module Middleware
     class UseToken
       def initialize(app, key = :current_body)
