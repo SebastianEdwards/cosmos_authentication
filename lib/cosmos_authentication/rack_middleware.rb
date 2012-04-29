@@ -11,11 +11,13 @@ module CosmosAuthentication
       end
 
       def authenticate(scope = '')
-        unless token = access_token_from_header
-          ensure_token
-          token = token_from_session
+        begin
+          token = access_token(scope)
+          @current = service.resource_owner(token)
+        rescue Cosmos::UnknownLinkError => e
+          session[:access_token] = nil
+          authenticate
         end
-        @current = service.resource_owner(token)
 
         nil
       end
@@ -32,6 +34,15 @@ module CosmosAuthentication
       end
 
       private
+      def access_token(scope)
+        unless token = access_token_from_header
+          ensure_token(scope)
+          token = access_token_from_session
+        end
+
+        token
+      end
+
       def access_token_from_header
         if has_header? && match = header.match(/Bearer\s+(\w+)/i)
           {'access_token'  => match[1]}
@@ -63,7 +74,7 @@ module CosmosAuthentication
         end
       end
 
-      def ensure_token
+      def ensure_token(scope)
         unless session[:access_token]
           if token = get_token(scope)
             session[:access_token]   = token['access_token']
@@ -105,6 +116,7 @@ module CosmosAuthentication
           config.client_id      = @opts[:client_id]
           config.client_secret  = @opts[:client_secret]
           config.endpoint       = @opts[:endpoint]
+          config.cache          = @opts[:cache] if @opts[:cache]
         end
       end
     end
