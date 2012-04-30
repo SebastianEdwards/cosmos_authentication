@@ -87,6 +87,7 @@ module CosmosAuthentication
         use Cosmos::Middleware::Discover
         use Cosmos::Middleware::Traverse, 'resource-owners'
         use Cosmos::Middleware::Traverse, 'current'
+        use Cosmos::Middleware::Check, :has_one_item?
         use Cosmos::Middleware::Save, :resource_owner
       end
 

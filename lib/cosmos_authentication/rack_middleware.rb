@@ -14,7 +14,7 @@ module CosmosAuthentication
         begin
           token = access_token(scope)
           @current = service.resource_owner(token)
-        rescue Cosmos::UnknownLinkError => e
+        rescue Cosmos::UnknownLinkError, Cosmos::FailedCheckError
           session[:access_token] = nil
           authenticate
         end
