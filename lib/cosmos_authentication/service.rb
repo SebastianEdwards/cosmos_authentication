@@ -1,9 +1,11 @@
 require "cosmos/service"
+require "cosmos_authentication/resource_owner"
 require "cosmos_authentication/middleware/use_token"
 
 module CosmosAuthentication
   class Service < Cosmos::Service
     attr_accessor :client_id, :client_secret
+    attr_writer :resource_owner_class
 
     def default_env
       super.merge({
@@ -48,7 +50,13 @@ module CosmosAuthentication
     end
 
     def resource_owner(access_token)
-      get_resource_owner(access_token)
+      resource_owner_class.new.tap do |resource_owner|
+        resource_owner.collection = get_resource_owner(access_token)
+      end
+    end
+
+    def resource_owner_class
+      @resource_owner_class || ResourceOwner
     end
 
     private

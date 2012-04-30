@@ -117,6 +117,9 @@ module CosmosAuthentication
           config.client_secret  = @opts[:client_secret]
           config.endpoint       = @opts[:endpoint]
           config.cache          = @opts[:cache] if @opts[:cache]
+          if @opts[:resource_owner_class]
+            config.resource_owner_class = @opts[:resource_owner_class]
+          end
         end
       end
     end
