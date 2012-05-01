@@ -49,6 +49,10 @@ module CosmosAuthentication
       get_providers
     end
 
+    def resource(resource_name, access_token, resource_owner)
+      get_resource(resource_name, access_token, resource_owner)
+    end
+
     def resource_owner(access_token)
       resource_owner_class.new.tap do |resource_owner|
         resource_owner.collection = get_resource_owner(access_token)
@@ -79,6 +83,19 @@ module CosmosAuthentication
       end
 
       output[:providers]
+    end
+
+    def get_resource(resource_name, access_token, resource_owner)
+      env = {access_token: access_token, resource_owner: resource_owner}
+      output = call(env) do
+        use Middleware::UseToken, :access_token
+        use Cosmos::Middleware::Load, :resource_owner
+        use Cosmos::Middleware::Traverse, 'resource'
+        use Cosmos::Middleware::Check, :has_items?
+        use Cosmos::Middleware::Save, :resource
+      end
+
+      output[:resource]
     end
 
     def get_resource_owner(access_token)

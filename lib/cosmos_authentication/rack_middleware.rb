@@ -22,6 +22,10 @@ module CosmosAuthentication
         nil
       end
 
+      def current_token
+        access_token_from_header || access_token_from_session
+      end
+
       def logged_in?
         !!current
       end
@@ -31,6 +35,10 @@ module CosmosAuthentication
         session[:refresh_token]  = nil
 
         nil
+      end
+
+      def resource(resource_name)
+        service.resource(resource_name, current_token, current)
       end
 
       private
